@@ -1,0 +1,10 @@
+name: SignCopy
+main: signcopy.SignCopy
+version: 0.1
+author: ChrizC
+description: SignCopy allows you to copy signs in a few clicks.
+commands:
+  sc:
+    description: Enables/disables SignCopy mode.
+    usage: |
+           /sc
