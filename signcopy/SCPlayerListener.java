@@ -71,6 +71,7 @@ public class SCPlayerListener extends PlayerListener {
                             }
                         }
                         else if (SignCopy.selected.get(event.getPlayer().getName()+"_mode") == 1) {
+                            if (event.getPlayer().getInventory().contains(323)) {
                             int test = event.getClickedBlock().getY() + 1;
                             final Block block = world.getBlockAt(new Location(world, event.getClickedBlock().getX(), event.getClickedBlock().getY() + 1, event.getClickedBlock().getZ()));
                             if (block.getType() != Material.AIR) {
@@ -79,6 +80,9 @@ public class SCPlayerListener extends PlayerListener {
                                 SignCopy.selected.put(event.getPlayer().getName()+"_mode",2);
                                 block.setType(Material.SIGN_POST);
                                 block.setData(dir);
+                                int blargh = event.getPlayer().getInventory().first(323);
+                                event.getPlayer().getInventory().clear(event.getPlayer().getInventory().first(323));
+                                event.getPlayer().updateInventory();
                                 final BlockState state = world.getBlockAt(new Location(world, event.getClickedBlock().getX(), event.getClickedBlock().getY() + 1, event.getClickedBlock().getZ())).getState();
                                 if (state instanceof Sign) {
                                     sign = (Sign)state;
@@ -89,7 +93,11 @@ public class SCPlayerListener extends PlayerListener {
                                 event.getPlayer().sendMessage(ChatColor.YELLOW + "[SignCopy] Sign copied!");
                             }
                         }
-                    }
+                    } else {
+                                SignCopy.selected.put(event.getPlayer().getName()+"_mode",2);
+                                event.getPlayer().sendMessage(ChatColor.YELLOW + "[SignCopy] Error, you do not have a Sign in your inventory.");
+                            }
+                        }
                     else if (SignCopy.selected.get(event.getPlayer().getName()+"_mode") == 2) {
                         final BlockState state = world.getBlockAt(new Location(world, event.getClickedBlock().getX(), event.getClickedBlock().getY(), event.getClickedBlock().getZ())).getState();
                         final Block firstsign = world.getBlockAt(new Location(world, event.getClickedBlock().getX(), event.getClickedBlock().getY(), event.getClickedBlock().getZ()));
