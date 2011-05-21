@@ -32,12 +32,16 @@ public class SCCommands {
                         if (label.equals("sc")) {
                             sc(sender);
                         }
+                 } else {
+                     sender.sendMessage(ChatColor.YELLOW + "[SignCopy] You do not have the right access level to enable SignCopy mode.");
                  }
                     } else {
                      if (player.isOp()) {
                          if (label.equals("sc")) {
                             sc(sender);
                         }
+                     } else {
+                         sender.sendMessage(ChatColor.YELLOW + "[SignCopy] You do not have the right access level to enable SignCopy mode.");
                      }
                  }
                   

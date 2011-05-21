@@ -11,16 +11,15 @@ import org.bukkit.block.Sign;
 import org.bukkit.World;
 import org.bukkit.Location;
 import org.bukkit.plugin.*;
-import org.bukkit.material.MaterialData;
 import org.bukkit.material.*;
-import java.lang.*;
 
 public class SCPlayerListener extends PlayerListener {
     Player player;
     private SCProps props;
     private SCCommands cmdHandle;
     private final SignCopy plugin;
-    String[] directions;
+    int[] directions;
+    byte dir;
     
     public SCPlayerListener(SignCopy instance, SCProps props, SCCommands cmdHandle) {
         plugin = instance;
@@ -33,40 +32,39 @@ public class SCPlayerListener extends PlayerListener {
         MaterialData md;
     public void onPlayerInteract(PlayerInteractEvent event) {
         Location target = event.getPlayer().getLocation();
+        player = event.getPlayer();
         World world = target.getWorld();
-        directions = new String[16];
-        directions[0] = "West";
-        directions[1] = "West_North_West";
-        directions[2] = "North_West";
-        directions[3] = "North_North_West";
-        directions[4] = "North";
-        directions[5] = "North_North_East";
-        directions[6] = "North_East";
-        directions[7] = "East_North_East";
-        directions[8] = "East";
-        directions[9] = "East_South_East";
-        directions[10] = "South_East";
-        directions[11] = "South_South_East";
-        directions[12] = "South";
-        directions[13] = "South_South_West";
-        directions[14] = "South_West";
-        directions[15] = "West_South_West";
+        directions = new int[16];
+        directions[0] = 0;
+        directions[1] = 1;
+        directions[2] = 2;
+        directions[3] = 3;
+        directions[4] = 4;
+        directions[5] = 5;
+        directions[6] = 6;
+        directions[7] = 7;
+        directions[8] = 8;
+        directions[9] = 9;
+        directions[10] = 10;
+        directions[11] = 11;
+        directions[12] = 12;
+        directions[13] = 13;
+        directions[14] = 14;
+        directions[15] = 15;
         Sign sign;
         if (cmdHandle.SCmode == 1) {
             permissionsPlugin = plugin.getServer().getPluginManager().getPlugin("Permissions");
             if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                 if (event.getPlayer().getItemInHand().getTypeId() == props.tool) {
-                    // TODO: Fix fucking permissions.
-                    //if (plugin.permissionHandler.has(player, "sc.signcopy")) {
+                    if (plugin.permissionHandler.has(player, "sc.signcopy")) {
                         if (SignCopy.selected.get(event.getPlayer().getName()+"_mode") == null) {
                             final BlockState state = world.getBlockAt(new Location(world, event.getClickedBlock().getX(), event.getClickedBlock().getY(), event.getClickedBlock().getZ())).getState();
+                            final Block firstsign = world.getBlockAt(new Location(world, event.getClickedBlock().getX(), event.getClickedBlock().getY(), event.getClickedBlock().getZ()));
                             if (state instanceof Sign) {
                                 sign = (Sign)state;
                                 SignCopy.selected.put(event.getPlayer().getName()+"_mode",1);
-                                //for (int i=1; i<4; i++) {
-                                //    lines = sign.getLine(i);
-                                // }
                                 cmdHandle.lines = sign.getLines();
+                                dir = firstsign.getData();
                                 event.getPlayer().sendMessage(ChatColor.YELLOW + "[SignCopy] Sign selected.");
                             } else {
                                 event.getPlayer().sendMessage(ChatColor.YELLOW + "[SignCopy] You need to select a sign!");
@@ -80,47 +78,32 @@ public class SCPlayerListener extends PlayerListener {
                             } else {
                                 SignCopy.selected.put(event.getPlayer().getName()+"_mode",2);
                                 block.setType(Material.SIGN_POST);
+                                block.setData(dir);
                                 final BlockState state = world.getBlockAt(new Location(world, event.getClickedBlock().getX(), event.getClickedBlock().getY() + 1, event.getClickedBlock().getZ())).getState();
                                 if (state instanceof Sign) {
                                     sign = (Sign)state;
                                     for (int i=0; i<4; i++) {
                                         sign.setLine(i, cmdHandle.lines[i]);
                                     }
-                                    String pl = sign.getData().toString();
-                                    String[] dir = pl.split("[()]");
-                                    System.out.println(dir[1]);
-                                    String directio = dir[1];
-                                    int direct = Integer.parseInt(directio);
-                                    if (direct >= 8) {
-                                        direct = direct - 8;
-                                    } else if (direct <= 7) {
-                                        direct = direct + 8;
-                                    }
-                                md = new MaterialData(Material.SIGN_POST);
-                                sign.setData(md);
-                                // TODO: Get sign facing correct fucking direction.
-                                // sign.setFacingDirection();
                                 sign.update(true);
-                                
                                 event.getPlayer().sendMessage(ChatColor.YELLOW + "[SignCopy] Sign copied!");
                             }
                         }
                     }
                     else if (SignCopy.selected.get(event.getPlayer().getName()+"_mode") == 2) {
                         final BlockState state = world.getBlockAt(new Location(world, event.getClickedBlock().getX(), event.getClickedBlock().getY(), event.getClickedBlock().getZ())).getState();
+                        final Block firstsign = world.getBlockAt(new Location(world, event.getClickedBlock().getX(), event.getClickedBlock().getY(), event.getClickedBlock().getZ()));
                         if (state instanceof Sign) {
                                 sign = (Sign)state;
                                 SignCopy.selected.put(event.getPlayer().getName()+"_mode",1);
-                                //for (int i=1; i<4; i++) {
-                                //    lines = sign.getLine(i);
-                                // }
                                 cmdHandle.lines = sign.getLines();
+                                dir = firstsign.getData();
                                 event.getPlayer().sendMessage(ChatColor.YELLOW + "[SignCopy] Sign selected.");
                             } else {
                                 event.getPlayer().sendMessage(ChatColor.YELLOW + "[SignCopy] You need to select a sign!");
                             }
                     }
-                //}
+                }
             }
         }
     }

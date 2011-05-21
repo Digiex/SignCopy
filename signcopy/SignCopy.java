@@ -1,6 +1,5 @@
 package signcopy;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event.*;
 import org.bukkit.event.*;
 import org.bukkit.plugin.PluginDescriptionFile;
