@@ -1,7 +1,13 @@
-Requested by yup8.
-
-Created and maintained by ChrizC.
-
-**SignCopy**
-
-SignCopy allows you to quickly and easily replicate signs with just a few clicks.
+/**
+* SignCopy - Copy signs and their text, as long as you have a sign in your inventory!
+*
+* Requested by: yup8.
+*
+* @author - ChrizC <timesplitter08@gmail.com>
+*
+* @copyright: Copyright (C) 2011
+*
+* @license: This plugin is fully open-source, and you are allowed to modify and recompile
+* code for personal usage. Any code use for commerical purposes is not allowed without
+* strict written permission from the author.
+**/
