@@ -1,0 +1,23 @@
+name: SignCopy
+main: net.digiex.signcopy.SignCopy
+version: 1.0
+description: SignCopy allows you to copy signs in a few clicks.
+database: false
+startup: postworld
+author: [ChrizC, xzKinGzxBuRnzx]
+commands:
+  signcopy:
+    description: Enables/disables SignCopy mode.
+    aliases: [sc]
+    usage: /<command>
+  signreload:
+    description: Reloads SignCopy config file.
+    aliases: [sr]
+    usage: /<command>
+permissions:
+  signcopy.sc:
+    description: Allows use of SignCopy.
+    default: op
+  signcopy.sr:
+    descriptions: Allows reloading of SignCopy.
+    default: op
