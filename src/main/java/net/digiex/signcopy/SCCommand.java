@@ -21,33 +21,31 @@ import org.bukkit.entity.Player;
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-public class SCCommand implements CommandExecutor {
-
+public class SCCommand implements CommandExecutor{
+    
     private final SignCopy plugin;
-
+    
     public SCCommand(SignCopy plugin) {
         this.plugin = plugin;
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("Sorry, only players can use SignCopy!");
-            return true;
-        }
-        Player player = (Player) sender;
-        if (player.hasPermission("signcopy.sc")) {
-            if (!plugin.copying.containsKey(player)) {
-                SignEntry entry = new SignEntry(1);
-                plugin.copying.put(player, entry);
-                player.sendMessage("SignCopy mode activated! Right click on a sign to select it for copy, then right click on a block to place the sign. Make sure you have atleast one Sign in your inventory.");
+    public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] strings) {
+        if (cs instanceof Player) {
+            Player player = (Player) cs;
+            if (player.hasPermission("signcopy.sc")) {
+                if (!plugin.signs.containsKey(player)) {
+                    plugin.signs.put(player, null);
+                    player.sendMessage("Sign copy mode activated!");
+                } else {
+                    plugin.signs.remove(player);
+                    player.sendMessage("Sign copy mode deactivated.");
+                }
                 return true;
             }
-            plugin.copying.remove(player);
-            player.sendMessage("SignCopy mode deactived.");
-            return true;
         } else {
-            player.sendMessage("You do not have permissions to use SignCopy.");
-            return true;
+            plugin.log.info("Sorry, in-game only command.");
         }
+        return false;
     }
+    
 }

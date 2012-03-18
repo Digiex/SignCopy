@@ -27,20 +27,20 @@ import org.bukkit.plugin.java.JavaPlugin;
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 public class SignCopy extends JavaPlugin {
-    
+
     public Logger log;
     public int tool = 280;
-    public HashMap<Player, SignEntry> copying = new HashMap<Player, SignEntry>();
+    public HashMap<Player, Sign> signs = new HashMap<Player, Sign>();
     
     private File configFile;
     private FileConfiguration config;
     private final SCListener listener = new SCListener(this);
-    
+
     @Override
     public void onDisable() {
         log.info("is now disabled.");
     }
-    
+
     @Override
     public void onEnable() {
         log = getLogger();
@@ -55,7 +55,7 @@ public class SignCopy extends JavaPlugin {
         registerCommands();
         log.info("is now enabled!");
     }
-    
+
     public void loadConfig() {
         try {
             config.load(configFile);
@@ -68,10 +68,10 @@ public class SignCopy extends JavaPlugin {
         }
         tool = config.getInt("toolID", 280);
     }
-    
+
     @Override
     public void saveConfig() {
-        config.set("toolID", tool);
+        config.set("toolID", 280);
         config.options().header("Be sure to use /sr if you change any settings here while the server is running.");
         try {
             config.save(configFile);
@@ -79,13 +79,13 @@ public class SignCopy extends JavaPlugin {
             e.printStackTrace();
         }
     }
-    
+
     private void registerEvents() {
         getServer().getPluginManager().registerEvents(listener, this);
     }
-    
+
     private void registerCommands() {
-        getCommand("signcopy").setExecutor(new SCCommand(this));
         getCommand("signreload").setExecutor(new SRCommand(this));
+        getCommand("signcopy").setExecutor(new SCCommand(this));
     }
 }

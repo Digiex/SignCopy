@@ -1,6 +1,6 @@
 name: SignCopy
 main: net.digiex.signcopy.SignCopy
-version: 1.0
+version: 0.2
 description: SignCopy allows you to copy signs in a few clicks.
 database: false
 startup: postworld

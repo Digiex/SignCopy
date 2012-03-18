@@ -23,21 +23,25 @@ import org.bukkit.entity.Player;
  */
 public class SRCommand implements CommandExecutor {
     
-    private SignCopy plugin;
+    private final SignCopy plugin;
     
     public SRCommand(SignCopy plugin) {
         this.plugin = plugin;
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        plugin.loadConfig();
         if (!(sender instanceof Player)) {
+            plugin.loadConfig();
             plugin.log.info("SignCopy reloaded!");
-            return true;
         } else {
             Player player = (Player) sender;
-            player.sendMessage("SignCopy reloaded!");
+            if (player.hasPermission("signcopy.sr")) {
+                plugin.loadConfig();
+                player.sendMessage("SignCopy reloaded!");
+            } else {
+                player.sendMessage("You can't reload Sign copy. You don't have permission.");
+            }
         }
-        return false;
+        return true;
     }
 }

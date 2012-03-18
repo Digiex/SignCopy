@@ -1,5 +1,8 @@
 package net.digiex.signcopy;
 
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+
 /*
  * SignCopy 0.2 Copyright (C) 2012 ChrizC, xzKinGzxBuRnzx
  *
@@ -16,29 +19,33 @@ package net.digiex.signcopy;
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-public class SignEntry {
+public class Sign {
     
-    private int mode;
+    private Block block;
     private String[] text;
+    private Material type;
+    private Byte data;
     
-    public SignEntry( int mode) {
-        this.mode = mode;
+    public Sign(Block block, String[] text) {
+        this.block = block;
+        this.text = text;
+        this.type = block.getType();
+        this.data = block.getData();
     }
     
-    public int getMode() {
-        return mode;
+    public Block getBlock() {
+        return block;
+    }
+    
+    public Material getType() {
+        return type;
     }
     
     public String[] getText() {
         return text;
     }
     
-    public void setMode(Integer mode) {
-        this.mode = mode;
+    public Byte getData() {
+        return data;
     }
-    
-    public void setText(String[] text) {
-        this.text = text;
-    }
-    
 }

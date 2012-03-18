@@ -2,13 +2,13 @@ package net.digiex.signcopy;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 /*
  * SignCopy 0.2 Copyright (C) 2012 ChrizC, xzKinGzxBuRnzx
@@ -37,39 +37,97 @@ public class SCListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        Block block = event.getClickedBlock();
         if (event.isCancelled()) {
             return;
         }
-        if (plugin.copying.containsKey(player)) {
-            if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && event.getClickedBlock().getType() != Material.AIR) {
-                if (event.getPlayer().getItemInHand().getTypeId() == plugin.tool) {
-                    if (player.hasPermission("signcopy.sc")) {
-                        SignEntry entry = plugin.copying.get(player);
-                        if (entry.getMode() == 1) {
-                            Block block = event.getClickedBlock();
-                            BlockState state = block.getState();
-                            if (state instanceof Sign) {
-                                Sign sign = (Sign) state;
-                                entry.setText(sign.getLines());
-                                entry.setMode(2);
-                                event.getPlayer().sendMessage("Sign selected.");
-                            } else {
-                                event.getPlayer().sendMessage("You need to select a sign!");
-                            }
-                        } else if (entry.getMode() == 2) {
-                            Block block = event.getClickedBlock();
-                            BlockState state = block.getState();
-                            if (state instanceof Sign) {
-                                Sign sign = (Sign) state;
-                                for (int i = 0; i < 4; i++) {
-                                    sign.setLine(i, entry.getText()[i]);
-                                }
-                                sign.update(true);
-                                event.getPlayer().sendMessage("Sign copied!");
-                            }
-                        }
-                    }
+        if (event.getClickedBlock().getType() == Material.AIR) {
+            return;
+        }
+        if (player.getItemInHand().getTypeId() != plugin.tool) {
+            return;
+        }
+        if (!plugin.signs.containsKey(player)) {
+            return;
+        }
+        Sign sign = plugin.signs.get(player);
+        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            if (sign == null) {
+                return;
+            }
+            if (block.getState() instanceof org.bukkit.block.Sign) {
+                org.bukkit.block.Sign s = (org.bukkit.block.Sign) block.getState();
+                for (int i = 0; i < 4; i++) {
+                    s.setLine(i, sign.getText()[i]);
                 }
+                s.update(true);
+                player.sendMessage("Sign Pasted!");
+                return;
+            }
+            ItemStack stack = new ItemStack(323, 1);
+            if (!player.getInventory().contains(stack)) {
+                player.sendMessage("You don't have a sign in your inventory.");
+                return;
+            }
+            block = block.getRelative(event.getBlockFace());
+            if (sign.getType() == Material.WALL_SIGN) {
+                switch (event.getBlockFace()) {
+                    case UP:
+                        block.setTypeId(63, false);
+                        block.getState().setData(new MaterialData(block.getType()));
+                        break;
+                    case DOWN:
+                        block.setTypeId(63, false);
+                        block.getState().setData(new MaterialData(block.getType()));
+                        break;
+                    case NORTH:
+                        block.setTypeId(68, false);
+                        block.setData((byte) 0x04, false);
+                        block.getState().setData(new MaterialData(block.getType()));
+                        break;
+                    case SOUTH:
+                        block.setTypeId(68, false);
+                        block.setData((byte) 0x05, false);
+                        block.getState().setData(new MaterialData(block.getType()));
+                        break;
+                    case EAST:
+                        block.setTypeId(68, false);
+                        block.setData((byte) 0x02, false);
+                        block.getState().setData(new MaterialData(block.getType()));
+                        break;
+                    case WEST:
+                        block.setTypeId(68, false);
+                        block.setData((byte) 0x03, false);
+                        block.getState().setData(new MaterialData(block.getType()));
+                        break;
+                }
+                org.bukkit.block.Sign s = (org.bukkit.block.Sign) block.getState();
+                for (int i = 0; i < 4; i++) {
+                    s.setLine(i, sign.getText()[i]);
+                }
+                s.update(true);
+                player.getInventory().removeItem(stack);
+                player.updateInventory();
+                player.sendMessage("Sign pasted!");
+            } else {
+                block.setType(sign.getType());
+                block.setData(sign.getData(), false);
+                block.getState().setData(new MaterialData(block.getType()));
+                org.bukkit.block.Sign s = (org.bukkit.block.Sign) block.getState();
+                for (int i = 0; i < 4; i++) {
+                    s.setLine(i, sign.getText()[i]);
+                }
+                s.update(true);
+                player.getInventory().removeItem(stack);
+                player.updateInventory();
+                player.sendMessage("Sign pasted!");
+            }
+        } else if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+            if (block.getState() instanceof org.bukkit.block.Sign) {
+                org.bukkit.block.Sign s = (org.bukkit.block.Sign) block.getState();
+                sign = new Sign(block, s.getLines());
+                plugin.signs.put(player, sign);
+                player.sendMessage("Sign copied");
             }
         }
     }
