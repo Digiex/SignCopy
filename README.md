@@ -3,7 +3,7 @@ SignCopy
 
 A Bukkit Minecraft Server Mod.
 
-[http://forums.bukkit.org/threads/edit-misc-signcopy-v0-1-copy-signs-and-their-text-permissions-1000.18121/](http://forums.bukkit.org/threads/edit-misc-signcopy-v0-1-copy-signs-and-their-text-permissions-1000.18121/)
+[http://dev.bukkit.org/server-mods/signcopy/](http://dev.bukkit.org/server-mods/signcopy/)
 
 Compilation
 -----------

@@ -1,6 +1,7 @@
 name: SignCopy
 main: net.digiex.signcopy.SignCopy
-version: 0.2
+version: 0.3
+url: http://dev.bukkit.org/server-mods/signcopy/
 description: SignCopy allows you to copy signs in a few clicks.
 database: false
 startup: postworld
