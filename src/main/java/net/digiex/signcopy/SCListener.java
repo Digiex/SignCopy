@@ -1,5 +1,6 @@
 package net.digiex.signcopy;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -64,10 +65,15 @@ public class SCListener implements Listener {
                 player.sendMessage("Sign Pasted!");
                 return;
             }
-            ItemStack stack = new ItemStack(323, 1);
-            if (!player.getInventory().contains(stack)) {
-                player.sendMessage("You don't have a sign in your inventory.");
-                return;
+            if (player.getGameMode() == GameMode.SURVIVAL) {
+                ItemStack stack = new ItemStack(323, 1);
+                if (!player.getInventory().contains(stack)) {
+                    player.sendMessage("You don't have a sign in your inventory.");
+                    return;
+                } else {
+                    player.getInventory().removeItem(stack);
+                    player.updateInventory();
+                }
             }
             block = block.getRelative(event.getBlockFace());
             if (sign.getType() == Material.WALL_SIGN) {
@@ -106,8 +112,6 @@ public class SCListener implements Listener {
                     s.setLine(i, sign.getText()[i]);
                 }
                 s.update(true);
-                player.getInventory().removeItem(stack);
-                player.updateInventory();
                 player.sendMessage("Sign pasted!");
             } else {
                 block.setType(sign.getType());
@@ -118,8 +122,6 @@ public class SCListener implements Listener {
                     s.setLine(i, sign.getText()[i]);
                 }
                 s.update(true);
-                player.getInventory().removeItem(stack);
-                player.updateInventory();
                 player.sendMessage("Sign pasted!");
             }
         } else if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
