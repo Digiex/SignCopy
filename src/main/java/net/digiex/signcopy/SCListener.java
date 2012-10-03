@@ -66,7 +66,7 @@ public class SCListener implements Listener {
                 return;
             }
             if (player.getGameMode() == GameMode.SURVIVAL) {
-                ItemStack stack = new ItemStack(323, 1);
+                ItemStack stack = new ItemStack(323);
                 if (!player.getInventory().contains(stack)) {
                     player.sendMessage("You don't have a sign in your inventory.");
                     return;
