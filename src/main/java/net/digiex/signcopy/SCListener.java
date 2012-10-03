@@ -71,7 +71,12 @@ public class SCListener implements Listener {
                     player.sendMessage("You don't have a sign in your inventory.");
                     return;
                 } else {
-                    player.getInventory().removeItem(stack);
+                    if (stack.getAmount() > 1) {
+                        player.getInventory().removeItem(stack);
+                        player.getInventory().addItem(new ItemStack(323, stack.getAmount() - 1));
+                    } else {
+                        player.getInventory().removeItem(stack);
+                    }
                     player.updateInventory();
                 }
             }
