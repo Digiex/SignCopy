@@ -35,14 +35,11 @@ public class SCListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
-        if (event.isCancelled()) {
-            return;
-        }
-        if (event.getClickedBlock().getType() == Material.AIR) {
+        if (block.getType() == Material.AIR) {
             return;
         }
         if (player.getItemInHand().getTypeId() != plugin.tool) {
@@ -66,51 +63,39 @@ public class SCListener implements Listener {
                 return;
             }
             if (player.getGameMode() == GameMode.SURVIVAL) {
-                ItemStack stack = new ItemStack(323);
-                if (!player.getInventory().contains(stack)) {
+                if (!player.getInventory().contains(323)) {
                     player.sendMessage("You don't have a sign in your inventory.");
                     return;
                 } else {
-                    if (stack.getAmount() > 1) {
-                        player.getInventory().removeItem(stack);
-                        player.getInventory().addItem(new ItemStack(323, stack.getAmount() - 1));
-                    } else {
-                        player.getInventory().removeItem(stack);
-                    }
+                    player.getInventory().removeItem(new ItemStack(323,1));
                     player.updateInventory();
                 }
             }
             block = block.getRelative(event.getBlockFace());
             if (sign.getType() == Material.WALL_SIGN) {
                 switch (event.getBlockFace()) {
-                    case UP:
-                        block.setTypeId(63, false);
-                        block.getState().setData(new MaterialData(block.getType()));
-                        break;
-                    case DOWN:
-                        block.setTypeId(63, false);
-                        block.getState().setData(new MaterialData(block.getType()));
-                        break;
-                    case NORTH:
-                        block.setTypeId(68, false);
-                        block.setData((byte) 0x04, false);
-                        block.getState().setData(new MaterialData(block.getType()));
-                        break;
                     case SOUTH:
-                        block.setTypeId(68, false);
-                        block.setData((byte) 0x05, false);
-                        block.getState().setData(new MaterialData(block.getType()));
-                        break;
-                    case EAST:
-                        block.setTypeId(68, false);
-                        block.setData((byte) 0x02, false);
-                        block.getState().setData(new MaterialData(block.getType()));
-                        break;
-                    case WEST:
                         block.setTypeId(68, false);
                         block.setData((byte) 0x03, false);
                         block.getState().setData(new MaterialData(block.getType()));
                         break;
+                    case NORTH:
+                        block.setTypeId(68, false);
+                        block.setData((byte) 0x02, false);
+                        block.getState().setData(new MaterialData(block.getType()));
+                        break;
+                    case EAST:
+                        block.setTypeId(68, false);
+                        block.setData((byte) 0x05, false);
+                        block.getState().setData(new MaterialData(block.getType()));
+                        break;
+                    case WEST:
+                        block.setTypeId(68, false);
+                        block.setData((byte) 0x04, false);
+                        block.getState().setData(new MaterialData(block.getType()));
+                        break;
+				default:
+					return;
                 }
                 org.bukkit.block.Sign s = (org.bukkit.block.Sign) block.getState();
                 for (int i = 0; i < 4; i++) {
@@ -131,6 +116,9 @@ public class SCListener implements Listener {
             }
         } else if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
             if (block.getState() instanceof org.bukkit.block.Sign) {
+            	if (plugin.signs.containsKey(player)) {
+            		plugin.signs.remove(player);
+            	}
                 org.bukkit.block.Sign s = (org.bukkit.block.Sign) block.getState();
                 sign = new Sign(block, s.getLines());
                 plugin.signs.put(player, sign);
